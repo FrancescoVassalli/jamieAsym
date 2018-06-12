@@ -683,7 +683,7 @@ public:
 		energy = Scalar(calculateEnergy(pz));
 		eta= Scalar(calculateEta(_pT,pz));
 	}
-	Jet(float _pT, float _phi, float _y, float _r, float pz, float energy){ // calculate eta and e
+	Jet(float _pT, float _phi, float _y, float _r, float pz, float mass,float energy){ // calculate eta and e
 		this->pT =Scalar(_pT);
 		this->phi = Scalar(_phi);
 		this->y = Scalar(_y);
@@ -878,12 +878,12 @@ public:
 				if (deltaphi(antikT->phi(i),phi0)>phiRange)
 				{
 					if(count==0){
-						leading = Jet(antikT->pT(i),antikT->phi(i),antikT->y(i),radius,(antikT->p(i)).pz(),(antikT->p(i)).e());
+						leading = Jet(antikT->pT(i),antikT->phi(i),antikT->y(i),radius,(antikT->p(i)).pz(),antikT->m(i),(antikT->p(i)).e());
 						count++;
 					}
 					else if (count==1)
 					{
-						subleading = Jet(antikT->pT(i),antikT->phi(i),antikT->y(i),radius,(antikT->p(i)).pz(),(antikT->p(i)).e());
+						subleading = Jet(antikT->pT(i),antikT->phi(i),antikT->y(i),radius,(antikT->p(i)).pz(),antikT->m(i),(antikT->p(i)).e());
 						count++;
 						break;
 					}
@@ -931,6 +931,14 @@ private:
 	void makeXjPhi(){
 		xjphi=XjPhi(leading,subleading);
 	}
+	inline float deltaPhi(float i1, float i2){
+	float r = TMath::Abs(i1-i2);
+	if (r>TMath::Pi())
+	{
+		r= 2*TMath::Pi()-r;
+	}
+	return r;
+}
 	Jet leading;
 	Jet subleading;
 	XjPhi xjphi;
