@@ -66,6 +66,7 @@ queue<myParticle> EventToQueue(Event e){
 void makeData(std::string filename, long nEvents, string pTHat, float gammaCut, bool genHEP){
 	if (genHEP)
 	{
+		using namespace HepMC;
 		string hepName = filename+".dat";
 		HepMC::Pythia8ToHepMC ToHepMC;    // Interface for conversion from Pythia8::Event to HepMC event.
     	HepMC::IO_GenEvent ascii_io(hepName, std::ios::out); //file where HepMC events will be stored.
@@ -74,7 +75,7 @@ void makeData(std::string filename, long nEvents, string pTHat, float gammaCut, 
 	TFile* f = new TFile(filename.c_str(),"RECREATE");
   	TTree* interest = new TTree("interest","interest");
   	interest->SetAutoSave(30000);
-  	using namespace HepMC;
+  	
 	/*pythia set up*/
     Pythia pythiaengine;
     pythiaengine.readString("Beams:eCM = 50200."); //LHC VS RHIC
