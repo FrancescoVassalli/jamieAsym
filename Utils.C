@@ -707,7 +707,7 @@ public:
 		return parton;
 	}
 	inline float deltaPhi(float in){
-		float r = TMath::Abs(i1-i2);
+		float r = TMath::Abs(in-phi.value);
 		if (r>TMath::Pi())
 		{
 			r= 2*TMath::Pi()-r;
