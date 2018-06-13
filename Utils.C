@@ -871,6 +871,7 @@ public:
 			leading=Jet(pt2,phi2,0,0);
 		}
 		calculateR2J2();
+		makeJetDeltaPhi();
 	}
 	//makes a Dijet event given a SlowJet that has already been filled it will exclude jets with deltaphi less than phiRange from phi0
 	DiJet(SlowJet* antikT, float radius,float phi0, float phiRange){
@@ -896,7 +897,7 @@ public:
 			}
 			isDijet= (count==2);
 			calculateR2J2();
-			
+			makeJetDeltaPhi();
 		}
 	}
 	DiJet(bool f){
@@ -910,9 +911,6 @@ public:
 	}
 	Jet getsubleading(){
 		return subleading;
-	}
-	void calculateR2J2(){
-		r2j2 = (leading.getEnergy().value-subleading.getEnergy().value)/(leading.getEnergy().value+subleading.getEnergy().value);
 	}
 	float getR2J2(){
 		return r2j2;
@@ -930,20 +928,34 @@ public:
 		return isDijet;
 	}
 private:
-	inline float deltaPhi(float i1, float i2){
-	float r = TMath::Abs(i1-i2);
-	if (r>TMath::Pi())
-	{
-		r= 2*TMath::Pi()-r;
-	}
-	return r;
-}
 	Jet leading;
 	Jet subleading;
 	float jetDeltaPhi;
 	float photonDeltaPhi;
 	float r2j2;
 	bool isDijet;
+
+	inline float deltaPhi(float i1, float i2){
+		float r = TMath::Abs(i1-i2);
+		if (r>TMath::Pi())
+		{
+			r= 2*TMath::Pi()-r;
+		}
+		return r;
+	}
+
+	inline float makeJetDeltaPhi(){
+		jetDeltaPhi = TMath::Abs(leading.getphi().value-subleading.getphi().value);
+		if (jetDeltaPhi>TMath::Pi())
+		{
+			jetDeltaPhi= 2*TMath::Pi()-r;
+		}
+		return jetDeltaPhi;
+	}
+
+	inline void calculateR2J2(){
+		r2j2 = (leading.getEnergy().value-subleading.getEnergy().value)/(leading.getEnergy().value+subleading.getEnergy().value);
+	}
 	
 };
 #endif
