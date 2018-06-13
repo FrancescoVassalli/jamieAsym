@@ -875,7 +875,7 @@ public:
 		{
 			for (int i = 0; i < antikT->sizeJet(); ++i)
 			{
-				if (deltaphi(antikT->phi(i),phi0)>phiRange)
+				if (deltaPhi(antikT->phi(i),phi0)>phiRange)
 				{
 					if(count==0){
 						leading = Jet(antikT->pT(i),antikT->phi(i),antikT->y(i),radius,(antikT->p(i)).pz(),antikT->m(i),(antikT->p(i)).e());
