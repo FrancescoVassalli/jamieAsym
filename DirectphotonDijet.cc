@@ -116,22 +116,24 @@ void makeData(std::string filename, long nEvents, string pTHat, float gammaCut, 
     			antikT2->analyze(pythiaengine.event);
     			DiJet dJTemp(antikT2,.2,pythiaengine.event[i].phi(),TMath::Pi()/2.0);
     			/*fill the tree*/ 
-    			asymmetry=dJTemp.getR2J2();
-    			e1=dJTemp.getleading().getpT().value;
-    			e2=dJTemp.getsubleading().getpT().value;
-    			deltaPhi=dJTemp.getDeltaPhi();
-    			pldeltaPhi=dJTemp.getleading().deltaPhi(pythiaengine.event[i].phi());
-    			psdeltaPhi=dJTemp.getsubleading().deltaPhi(pythiaengine.event[i].phi());
-    			photonpT=pythiaengine.event[i].pT();
-    			interest->Fill();
-  				if (genHEP)
-    			{
-    				HepMC::GenEvent* hepmcevt = new HepMC::GenEvent(); //create HepMC "event"
-          			ToHepMC.fill_next_event( pythiaengine, hepmcevt ); //convert event from pythia to HepMC
-          			ascii_io << hepmcevt;//write event to file
-          			delete hepmcevt; //delete event so it can be redeclared next time
-    			}
-     			break;
+          if(dJTemp){
+      			asymmetry=dJTemp.getR2J2();
+      			e1=dJTemp.getleading().getpT().value;
+      			e2=dJTemp.getsubleading().getpT().value;
+      			deltaPhi=dJTemp.getDeltaPhi();
+      			pldeltaPhi=dJTemp.getleading().deltaPhi(pythiaengine.event[i].phi());
+      			psdeltaPhi=dJTemp.getsubleading().deltaPhi(pythiaengine.event[i].phi());
+      			photonpT=pythiaengine.event[i].pT();
+      			interest->Fill();
+    				if (genHEP)
+      			{
+      				HepMC::GenEvent* hepmcevt = new HepMC::GenEvent(); //create HepMC "event"
+            			ToHepMC.fill_next_event( pythiaengine, hepmcevt ); //convert event from pythia to HepMC
+            			ascii_io << hepmcevt;//write event to file
+            			delete hepmcevt; //delete event so it can be redeclared next time
+      			}
+       			break;
+          }
     		}
     	}
   	}
