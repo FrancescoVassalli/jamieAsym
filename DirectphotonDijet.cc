@@ -73,11 +73,11 @@ void makeData(std::string filename, long nEvents, string pTHat, float gammaCut, 
   	TTree* interest = new TTree("interest","interest");
   	interest->SetAutoSave(30000);
   	
-	/*pythia set up*/
+	  /*pythia set up*/
     Pythia pythiaengine;
     pythiaengine.readString("Beams:eCM = 50200."); //LHC VS RHIC
   	pythiaengine.readString("promptphoton:all = on");
- 	pythiaengine.readString("HardQCD:all = on");
+  	//pythiaengine.readString("HardQCD:all = on");
   	pythiaengine.readString("Random::setSeed = on");
   	pythiaengine.readString("Random::seed =0");
   	pTHat = "PhaseSpace:pTHatMin = "+pTHat+".";
@@ -110,7 +110,7 @@ void makeData(std::string filename, long nEvents, string pTHat, float gammaCut, 
 
     	for (int i = 0; i < pythiaengine.event.size(); ++i)
     	{
-    		if (isDirect(pythiaengine.info.code())&&quickPhotonCheck(pythiaengine.event[i],gammaCut)) //eta, pT, and photon cut
+    		if (quickPhotonCheck(pythiaengine.event[i],gammaCut)) //eta, pT, and photon cut
     		{
     			/*make the event*/	
     			antikT2->analyze(pythiaengine.event);
