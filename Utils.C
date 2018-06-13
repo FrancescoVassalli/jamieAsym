@@ -706,6 +706,14 @@ public:
 		}
 		return parton;
 	}
+	inline float deltaPhi(float in){
+		float r = TMath::Abs(i1-i2);
+		if (r>TMath::Pi())
+		{
+			r= 2*TMath::Pi()-r;
+		}
+		return r;
+	}
 	void setParton(Parton p){
 		parton=p;
 	}
