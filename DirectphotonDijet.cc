@@ -71,7 +71,7 @@ void makeData(std::string filename, long nEvents, string pTHat, float gammaCut, 
 	filename+=".root";
 	TFile* f = new TFile(filename.c_str(),"RECREATE");
   	TTree* interest = new TTree("interest","interest");
-  	interest->SetAutoSave(30000);
+  	//interest->SetAutoSave(30000);
   	
 	  /*pythia set up*/
     Pythia pythiaengine;
@@ -84,7 +84,7 @@ void makeData(std::string filename, long nEvents, string pTHat, float gammaCut, 
   	pythiaengine.readString(pTHat);
   	pythiaengine.init();
   	/* Tbranching  */
-  	SlowJet *antikT2 = new SlowJet(-1,.4,10,2,2,1); 
+  	SlowJet *antikT2 = new SlowJet(-1,.2,10,2); 
   	/*init for the TTree*/
   	float asymmetry;
   	float deltaPhi;
