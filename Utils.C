@@ -948,7 +948,7 @@ private:
 		jetDeltaPhi = TMath::Abs(leading.getphi().value-subleading.getphi().value);
 		if (jetDeltaPhi>TMath::Pi())
 		{
-			jetDeltaPhi= 2*TMath::Pi()-r;
+			jetDeltaPhi= 2*TMath::Pi()-jetDeltaPhi;
 		}
 		return jetDeltaPhi;
 	}
