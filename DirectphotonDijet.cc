@@ -64,13 +64,10 @@ queue<myParticle> EventToQueue(Event e){
 }
 
 void makeData(std::string filename, long nEvents, string pTHat, float gammaCut, bool genHEP){
-	if (genHEP)
-	{
-		using namespace HepMC;
-		string hepName = filename+".dat";
-		HepMC::Pythia8ToHepMC ToHepMC;    // Interface for conversion from Pythia8::Event to HepMC event.
-    	HepMC::IO_GenEvent ascii_io(hepName, std::ios::out); //file where HepMC events will be stored.
-	}
+	using namespace HepMC;
+	string hepName = filename+".dat";
+    HepMC::IO_GenEvent ascii_io(hepName, std::ios::out); //file where HepMC events will be stored.
+	HepMC::Pythia8ToHepMC ToHepMC;    // Interface for conversion from Pythia8::Event to HepMC event.
 	filename+=".root";
 	TFile* f = new TFile(filename.c_str(),"RECREATE");
   	TTree* interest = new TTree("interest","interest");
@@ -123,8 +120,8 @@ void makeData(std::string filename, long nEvents, string pTHat, float gammaCut, 
     			e1=dJTemp.getleading().getpT().value;
     			e2=dJTemp.getsubleading().getpT().value;
     			deltaPhi=dJTemp.getDeltaPhi();
-    			pldeltaPhi=deltaPhi(pythiaengine.event[i].phi(),dJTemp.getleading().getphi().value);
-    			psdeltaPhi=deltaPhi(pythiaengine.event[i].phi(),dJTemp.getsubleading().getphi().value);
+    			pldeltaPhi=dJTemp.getleading().deltaPhi(pythiaengine.event[i].phi());
+    			psdeltaPhi=dJTemp.getsubleading().deltaPhi(pythiaengine.event[i].phi());
     			photonpT=pythiaengine.event[i].pT();
     			interest->Fill();
   				if (genHEP)
