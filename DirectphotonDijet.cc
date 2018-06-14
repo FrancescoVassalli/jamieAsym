@@ -122,14 +122,14 @@ void makeData(std::string filename, long nEvents, string pTHat, float gammaCut, 
     float jet2pT[300];
     close->Branch("jet1size",&jet1size);
     close->Branch("jet2size",&jet2size);
-    close->Branch("jet2ids",&jet2ids,"jet2ids[jet2size]/I");
-    close->Branch("jet1ids",&jet1ids,"jet1ids[jet1size]/I");
-    close->Branch("jet2etas",&jet2etas,"jet2etas[jet2size]/F");
-    close->Branch("jet2phis",&jet2phis,"jet2phis[jet2size]/F");
-    close->Branch("jet1etas",&jet1etas,"jet1etas[jet1size]/F");
-    close->Branch("jet1phis",&jet1phis,"jet1phis[jet1size]/F");
-    close->Branch("jet1pT",&jet1pT,"jet1pT[jet1size]/F");
-    close->Branch("jet2pT",&jet2pT,"jet2pT[jet2size]/F");
+    close->Branch("jet2ids",jet2ids,"jet2ids[jet2size]/I");
+    close->Branch("jet1ids",jet1ids,"jet1ids[jet1size]/I");
+    close->Branch("jet2etas",jet2etas,"jet2etas[jet2size]/F");
+    close->Branch("jet2phis",jet2phis,"jet2phis[jet2size]/F");
+    close->Branch("jet1etas",jet1etas,"jet1etas[jet1size]/F");
+    close->Branch("jet1phis",jet1phis,"jet1phis[jet1size]/F");
+    close->Branch("jet1pT",jet1pT,"jet1pT[jet1size]/F");
+    close->Branch("jet2pT",jet2pT,"jet2pT[jet2size]/F");
 
 
 
@@ -182,6 +182,7 @@ void makeData(std::string filename, long nEvents, string pTHat, float gammaCut, 
     	}
   	}
   	delete antikT2; //clear the mem
+    close->Write();
   	interest->Write();
   	f->Close();
   	delete f;
