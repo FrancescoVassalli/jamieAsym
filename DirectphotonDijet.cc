@@ -165,9 +165,9 @@ void makeData(std::string filename, long nEvents, string pTHat, float gammaCut, 
             if (deltaR<.2)
             {
               dJTemp.setConstituents(pythiaengine.event);
-              dJTemp.fill(true,&jet1size,jet1phis,jet1etas,jet1pT);
+              dJTemp.fill(true,&jet1size,&jet1phis,&jet1etas,&jet1pT);
               cout<<jet1etas[0]<<"\n";
-              dJTemp.fill(false,&jet2size,jet2phis,jet2etas,jet2pT);
+              dJTemp.fill(false,&jet2size,&jet2phis,&jet2etas,&jet2pT);
               close->Fill();
             }
     				if (genHEP)
