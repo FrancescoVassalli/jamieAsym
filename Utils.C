@@ -769,11 +769,11 @@ public:
 	int getmult(){
 		return mult;
 	}
-	void fill(int* size, float* phi, float* eta, float* pT){
+	void fill(int* size, float** phi, float** eta, float** pT){
 		*size=mult;
-		phi= vectorToArray(phis);
-		eta = vectorToArray(etas);
-		pT= vectorToArray(pTs);
+		phi= &vectorToArray(phis);
+		eta = &vectorToArray(etas);
+		pT= &vectorToArray(pTs);
 		cout<<"there"<<etas[0]<<"\n";
 	}
 	Scalar getpT(){
@@ -992,7 +992,7 @@ public:
 	Jet getsubleading(){
 		return subleading;
 	}
-	void fill(bool leading, int* size, float* phi, float* eta, float* pT){
+	void fill(bool leading, int* size, float** phi, float** eta, float** pT){
 		if (leading)
 		{
 			this->leading.fill(size, phi,eta,pT);
@@ -1001,7 +1001,7 @@ public:
 		else{
 			subleading.fill(size, phi,eta,pT);
 			cout<<"still:"<<eta[0];
-			
+
 		}
 	}
 	float getR2J2(){
