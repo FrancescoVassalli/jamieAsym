@@ -114,12 +114,12 @@ void makeData(std::string filename, long nEvents, string pTHat, float gammaCut, 
     int jet1size,jet2size;
     int jet1ids[300];
     int jet2ids[300];
-    float jet1etas[300];
-    float jet2etas[300];
-    float jet1phis[300];
-    float jet2phis[300];
-    float jet1pT[300];
-    float jet2pT[300];
+    float jet1etas*;
+    float jet2etas*;
+    float jet1phis*;
+    float jet2phis*;
+    float jet1pT*;
+    float jet2pT*;
     close->Branch("jet1size",&jet1size);
     close->Branch("jet2size",&jet2size);
     close->Branch("jet2ids",jet2ids,"jet2ids[jet2size]/I");
