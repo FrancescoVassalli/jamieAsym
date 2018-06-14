@@ -88,11 +88,13 @@ void makeData(std::string filename, long nEvents, string pTHat, float gammaCut, 
   	/*init for the TTree*/
   	float asymmetry;
   	float deltaPhi;
-  	float e1,e2,pldeltaPhi,psdeltaPhi;
+  	float e1,e2,pldeltaPhi,psdeltaPhi,deltaEta,deltaR;
   	float photonpT;
   	/* setting up the branches*/
   	interest->Branch("asymmetry",&asymmetry);
-  	interest->Branch("deltaPhi",&deltaPhi);
+    interest->Branch("deltaPhi",&deltaPhi);
+    interest->Branch("deltaR",&deltaR);
+    interest->Branch("deltaEta",&deltaEta);
   	interest->Branch("pldeltaPhi",&pldeltaPhi);
   	interest->Branch("psdeltaPhi",&psdeltaPhi);
   	interest->Branch("e1",&e1);
@@ -121,6 +123,8 @@ void makeData(std::string filename, long nEvents, string pTHat, float gammaCut, 
       			e1=dJTemp.getleading().getpT().value;
       			e2=dJTemp.getsubleading().getpT().value;
       			deltaPhi=dJTemp.getDeltaPhi();
+            deltaR=dJTemp.getDeltaR();
+            deltaEta=dJTemp.getDeltaEta();
       			pldeltaPhi=dJTemp.getleading().deltaPhi(pythiaengine.event[i].phi());
       			psdeltaPhi=dJTemp.getsubleading().deltaPhi(pythiaengine.event[i].phi());
       			photonpT=pythiaengine.event[i].pT();

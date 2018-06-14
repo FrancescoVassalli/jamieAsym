@@ -773,8 +773,16 @@ private:
 	Scalar energy;
 	Parton parton;
 
+	inline float deltaPhi(float i1, float i2){
+		float r = TMath::Abs(i1-i2);
+		if (r>TMath::Pi())
+		{
+			r= 2*TMath::Pi()-r;
+		}
+		return r;
+	}
 	float deltaR(Parton p){
-	  return TMath::Power((TMath::Power(TMath::Abs(p.geteta()-eta.value),2)+TMath::Power(TMath::Abs(p.getphi()-phi.value),2)),.5);
+	  return TMath::Power((TMath::Power(TMath::Abs(p.geteta()-eta.value),2)+TMath::Power(deltaPhi(p.getphi(),phi.value),2)),.5);
 	}
 	float calculateEta(float pt, float pz){
 		return .5* TMath::Log((TMath::Power(pt*pt+pz*pz,.5)+pt))/((TMath::Power(pt*pt+pz*pz,.5)-pt));
@@ -898,6 +906,8 @@ public:
 			isDijet= (count==2);
 			calculateR2J2();
 			makeJetDeltaPhi();
+			makeJetDeltaR();
+			makeJetDeltaEta();
 		}
 	}
 	DiJet(bool f){
@@ -931,6 +941,8 @@ private:
 	Jet leading;
 	Jet subleading;
 	float jetDeltaPhi;
+	float jetDeltaR;
+	float jetDeltaEta;
 	float photonDeltaPhi;
 	float r2j2;
 	bool isDijet;
@@ -955,6 +967,14 @@ private:
 
 	inline void calculateR2J2(){
 		r2j2 = (leading.getEnergy().value-subleading.getEnergy().value)/(leading.getEnergy().value+subleading.getEnergy().value);
+	}
+	inline makeJetDeltaR(){
+	  jetDeltaR=TMath::Power((TMath::Power(TMath::Abs(leading.geteta()-subleading.geteta()),2)+TMath::Power(jetDeltaPhi,2)),.5);
+	  return jetDeltaR;
+	}
+	inline makeJetDeltaEta(){
+		jetDeltaEta=TMath::Abs(leading.geteta()-subleading.geteta());
+		return jetDeltaEta;
 	}
 	
 };

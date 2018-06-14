@@ -1,6 +1,5 @@
 using namespace std;
 
-#include "Utils.C"
 #include <iostream>
 
 int plotCount=0;
@@ -59,57 +58,32 @@ inline float deltaPhi(Photon p, Jet j){
 void plot(TH2F *plot){
 	TCanvas *tc = new TCanvas();
 	tc->SetRightMargin(.15);
-	axisTitles(plot,"#Delta#phi","Total Count");
+	axisTitles(plot,"#Delta#phi Jet1-Jet2","(E1-E2)/(E1+E2)");
+	gPad->SetLogz();
+	plot->Scale(1/plot->Integral());
 	plot->Draw("colz");
 }
 
-void pickR2J2(TChain* tree){
-	float eT[300];
-	float phi[300];
-	float eta[300];
-	float e[300];
-	int id[300];
-	float jetphi[200];
-	float jetpT[200];
-	float jety[200];
-	float jetR[200];
-	float jetm[200];
-	float jetpz[200];
-	int photonPosition;
-	bool direct;
-	int end;
-	int jetend=0;
-	tree->SetBranchAddress("eT",&eT);
-	tree->SetBranchAddress("phi",&phi);
-	tree->SetBranchAddress("eta",&eta);
-	tree->SetBranchAddress("e",&e);
-	tree->SetBranchAddress("photonPosition",&photonPosition);
-	tree->SetBranchAddress("end",&end);
-	tree->SetBranchAddress("direct",&direct);
-	tree->SetBranchAddress("ID",&id);
-	tree->SetBranchAddress("jetphi",&jetphi);
-	tree->SetBranchAddress("jetpT",&jetpT);
-	tree->SetBranchAddress("jety",&jety);
-	tree->SetBranchAddress("jetR",&jetR);
-	tree->SetBranchAddress("jetm",jetm);
-	tree->SetBranchAddress("jetpz",jetpz);
-	tree->SetBranchAddress("jetend",&jetend);
-	TH2F *p_r2j2 = new TH2F(getNextPlotName().c_str(),"",18,0,TMath::Pi(),20,0,1); //work on these bins
-	for (int i = 0; i < tree->GetEntries(); ++i)
+void pickR2J2(TChain* interest){
+	float asymmetry;
+  	float deltaPhi;
+  	float e1,e2,pldeltaPhi,psdeltaPhi;
+  	float photonpT;
+	interest->SetBranchAddress("asymmetry",&asymmetry);
+  	interest->SetBranchAddress("deltaPhi",&deltaPhi);
+  	interest->SetBranchAddress("pldeltaPhi",&pldeltaPhi);
+  	interest->SetBranchAddress("psdeltaPhi",&psdeltaPhi);
+  	interest->SetBranchAddress("e1",&e1);
+  	interest->SetBranchAddress("e2",&e2);
+  	interest->SetBranchAddress("photonpT",&photonpT);
+	
+	TH2F *p_r2j2 = new TH2F(getNextPlotName().c_str(),"",15,0,.6,15,0,1); 
+	for (int i = 0; i < interest->GetEntries(); ++i)
 	{
-		tree->GetEntry(i);
-		end++; // ends are measured inclusive I want them exclusive
-		jetend++;
-		if(!direct) continue; //directCut
-		//Photon pTemp=Photon(end,photonPosition,eT,phi,eta,direct,.3); //make a photon
-		DiJet dijet = makeDiJet(makeJets(.2,phi[photonPosition],jetphi,jety,jetpT,jetR,jetpz,jetm,jetend)); //make all the jets then match
-		if (dijet) //checks that the event is actually a dijet 
-		{
-			p_r2j2->Fill(dijet.getDeltaPhi(),dijet.getR2J2());
-			//cout<<dijet.getDeltaPhi()<<":"<<dijet.getR2J2()<<'\n';
-		}
+		interest->GetEntry(i);
+		p_r2j2->Fill(deltaPhi,asymmetry);
 	}
-	cout<<"Entries:"<<p_r2j2->GetEntries()<<'\n';
+	//cout<<"Entries:"<<p_r2j2->GetEntries()<<'\n';
 	plot(p_r2j2);
 }
 
@@ -125,8 +99,8 @@ void handleFile(string name, string extension, int filecount){
 }
 
 void R2J2(){
-	string fileLocation = "/home/user/Droptemp/XjPhi3/";
-	string filename = "XjPhi3_pT15_";
+	string fileLocation = "/home/user/Droptemp/LHCj/";
+	string filename = "LHCGamma";
 	string extension = ".root";
 	string temp = fileLocation+filename;
 	handleFile(temp,extension,100);
