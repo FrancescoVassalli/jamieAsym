@@ -683,7 +683,7 @@ public:
 		energy = Scalar(calculateEnergy(pz));
 		eta= Scalar(calculateEta(_pT,pz));
 	}
-	Jet(float _pT, float _phi, float _y, float _r, float pz, float mass,float energy){ // calculate eta and e
+	Jet(float _pT, float _phi, float _y, float _r, float pz, float mass,float energy){ // calculate eta
 		this->pT =Scalar(_pT);
 		this->phi = Scalar(_phi);
 		this->y = Scalar(_y);
@@ -765,6 +765,9 @@ public:
 	bool operator!=(Jet s){
 		return pT!=s.getpT();
 	}
+	friend std::ostream& operator<<(std::ostream& os, Jet const & tc) {
+       return os <<"Jet energy:" << tc.energy.value <<" phi:"<<tc.phi.value<<" eta:"<<tc.eta.value<<'\n';
+    }
 private:
 	Scalar pT=-1;
 	Scalar phi =7;
@@ -909,8 +912,9 @@ public:
 			isDijet= (count==2);
 			calculateR2J2();
 			makeJetDeltaPhi();
-			makeJetDeltaR();
 			makeJetDeltaEta();
+			makeJetDeltaR();
+			
 		}
 	}
 	DiJet(bool f){
@@ -978,7 +982,7 @@ private:
 		r2j2 = (leading.getEnergy().value-subleading.getEnergy().value)/(leading.getEnergy().value+subleading.getEnergy().value);
 	}
 	inline void makeJetDeltaR(){
-	  jetDeltaR=TMath::Power((TMath::Power(TMath::Abs(leading.geteta().value-subleading.geteta().value),2)+TMath::Power(jetDeltaPhi,2)),.5);
+	  jetDeltaR=TMath::Power((TMath::Power(jetDeltaEta,2)+TMath::Power(jetDeltaPhi,2)),.5);
 	}
 	inline void makeJetDeltaEta(){
 		jetDeltaEta=TMath::Abs(leading.geteta().value-subleading.geteta().value);

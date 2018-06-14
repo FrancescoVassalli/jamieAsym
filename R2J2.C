@@ -67,23 +67,23 @@ void plot(TH2F *plot){
 void pickR2J2(TChain* interest){
 	float asymmetry;
   	float deltaPhi;
-  	float e1,e2,pldeltaPhi,psdeltaPhi;
+  	float deltaR;
+  	float deltaEta;
   	float photonpT;
 	interest->SetBranchAddress("asymmetry",&asymmetry);
+    interest->Branch("deltaEta",&deltaEta);
   	interest->SetBranchAddress("deltaPhi",&deltaPhi);
-  	interest->SetBranchAddress("pldeltaPhi",&pldeltaPhi);
-  	interest->SetBranchAddress("psdeltaPhi",&psdeltaPhi);
-  	interest->SetBranchAddress("e1",&e1);
-  	interest->SetBranchAddress("e2",&e2);
   	interest->SetBranchAddress("photonpT",&photonpT);
+  	interest->Branch("deltaR",&deltaR);
 	
 	TH2F *p_r2j2 = new TH2F(getNextPlotName().c_str(),"",15,0,.6,15,0,1); 
 	for (int i = 0; i < interest->GetEntries(); ++i)
 	{
 		interest->GetEntry(i);
-		p_r2j2->Fill(deltaPhi,asymmetry);
+		p_r2j2->Fill(deltaEta,asymmetry);
 	}
 	//cout<<"Entries:"<<p_r2j2->GetEntries()<<'\n';
+	cout<<interest->GetEntries()<<endl;
 	plot(p_r2j2);
 }
 
