@@ -891,6 +891,7 @@ public:
 	DiJet(SlowJet* antikT, float radius,float phi0, float phiRange){
 		int sizeJet = antikT->sizeJet();
 		int count=0;
+		isDijet =false;
 		if (sizeJet>2)
 		{
 			for (int i = 0; i < antikT->sizeJet(); ++i)
