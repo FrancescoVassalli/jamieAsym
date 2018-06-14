@@ -70,7 +70,10 @@ void makeData(std::string filename, long nEvents, string pTHat, float gammaCut, 
 	HepMC::Pythia8ToHepMC ToHepMC;    // Interface for conversion from Pythia8::Event to HepMC event.
 	filename+=".root";
 	TFile* f = new TFile(filename.c_str(),"RECREATE");
+  //main tree
   	TTree* interest = new TTree("interest","interest");
+    //tree for weird close-jet events
+    TTree* close = new TTree("close","close");
   	//interest->SetAutoSave(30000);
   	
 	  /*pythia set up*/
@@ -101,6 +104,35 @@ void makeData(std::string filename, long nEvents, string pTHat, float gammaCut, 
   	interest->Branch("e2",&e2);
   	interest->Branch("photonpT",&photonpT);
 
+    close->Branch("asymmetry",&asymmetry);
+    close->Branch("deltaPhi",&deltaPhi);
+    close->Branch("deltaR",&deltaR);
+    close->Branch("deltaEta",&deltaEta);
+    close->Branch("photonpT",&photonpT);
+    close->Branch("pldeltaPhi",&pldeltaPhi);
+    close->Branch("psdeltaPhi",&psdeltaPhi);
+    int jet1size,jet2size;
+    int jet1ids[300];
+    int jet2ids[300];
+    float jet1etas[300];
+    float jet2etas[300];
+    float jet1phis[300];
+    float jet2phis[300];
+    float jet1pT[300];
+    float jet2pT[300];
+    close->Branch("jet1size",&jet1size);
+    close->Branch("jet2size",&jet2size);
+    close->Branch("jet2ids",&jet2ids,"jet2ids[jet2size]/I");
+    close->Branch("jet1ids",&jet1ids,"jet1ids[jet1size]/I");
+    close->Branch("jet2etas",&jet2etas,"jet2etas[jet2size]/F");
+    close->Branch("jet2phis",&jet2phis,"jet2phis[jet2size]/F");
+    close->Branch("jet1etas",&jet1etas,"jet1etas[jet1size]/F");
+    close->Branch("jet1phis",&jet1phis,"jet1phis[jet1size]/F");
+    close->Branch("jet1pT",&jet1pT,"jet1pT[jet1size]/F");
+    close->Branch("jet2pT",&jet2pT,"jet2pT[jet2size]/F");
+
+
+
   	/* generation loop*/
     for (int iEvent = 0; iEvent < nEvents; ++iEvent)
   	{
@@ -119,7 +151,7 @@ void makeData(std::string filename, long nEvents, string pTHat, float gammaCut, 
     			DiJet dJTemp(antikT2,.2,pythiaengine.event[i].phi(),TMath::Pi()/2.0);
     			/*fill the tree*/ 
           if(dJTemp){
-            cout<<dJTemp;
+            //cout<<dJTemp;
       			asymmetry=dJTemp.getR2J2();
       			e1=dJTemp.getleading().getpT().value;
       			e2=dJTemp.getsubleading().getpT().value;
@@ -130,6 +162,12 @@ void makeData(std::string filename, long nEvents, string pTHat, float gammaCut, 
       			psdeltaPhi=dJTemp.getsubleading().deltaPhi(pythiaengine.event[i].phi());
       			photonpT=pythiaengine.event[i].pT();
       			interest->Fill();
+            if (deltaR<.2)
+            {
+              dJTemp.fill(true,&jet1size,jet1phis,jet1etas,jet1pT);
+              dJTemp.fill(false,&jet2size,jet2phis,jet2etas,jet2pT);
+              clost->Fill();
+            }
     				if (genHEP)
       			{
       				HepMC::GenEvent* hepmcevt = new HepMC::GenEvent(); //create HepMC "event"

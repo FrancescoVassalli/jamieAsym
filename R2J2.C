@@ -1,8 +1,9 @@
 using namespace std;
 
 #include <iostream>
-
-int plotCount=0;
+namespace {
+	int plotCount=0;
+}
 inline string getNextPlotName(){
 	return "plot"+to_string(plotCount++);
 }
@@ -58,10 +59,18 @@ inline float deltaPhi(Photon p, Jet j){
 void plot(TH2F *plot){
 	TCanvas *tc = new TCanvas();
 	tc->SetRightMargin(.15);
-	axisTitles(plot,"#Delta#phi Jet1-Jet2","(E1-E2)/(E1+E2)");
+	axisTitles(plot,"#DeltaR Jet1-Jet2","(E1-E2)/(E1+E2)");
 	gPad->SetLogz();
 	plot->Scale(1/plot->Integral());
 	plot->Draw("colz");
+}
+void plot1d(TH1F *plot,string xTitle, string yTitle){
+	TCanvas *tc = new TCanvas();
+	//tc->SetRightMargin(.15);
+	axisTitles(plot,xTitle.c_str(),yTitle.c_str());
+	//gPad->SetLogz();
+	plot->Scale(1/plot->Integral());
+	plot->Draw();
 }
 
 void pickR2J2(TChain* interest){
@@ -71,20 +80,27 @@ void pickR2J2(TChain* interest){
   	float deltaEta;
   	float photonpT;
 	interest->SetBranchAddress("asymmetry",&asymmetry);
-    interest->Branch("deltaEta",&deltaEta);
+    interest->SetBranchAddress("deltaEta",&deltaEta);
   	interest->SetBranchAddress("deltaPhi",&deltaPhi);
   	interest->SetBranchAddress("photonpT",&photonpT);
-  	interest->Branch("deltaR",&deltaR);
+  	interest->SetBranchAddress("deltaR",&deltaR);
 	
-	TH2F *p_r2j2 = new TH2F(getNextPlotName().c_str(),"",15,0,.6,15,0,1); 
+	TH2F *p_r2j2 = new TH2F(getNextPlotName(&plotCount).c_str(),"",100,0,4,100,0,1); 
+	TH1F *delR1 = new TH1F(getNextPlotName(&plotCount).c_str(),"",50,0,4);
+	TH1F *asym1 = new TH1F(getNextPlotName(&plotCount).c_str(),"",50,0,1);
 	for (int i = 0; i < interest->GetEntries(); ++i)
 	{
 		interest->GetEntry(i);
-		p_r2j2->Fill(deltaEta,asymmetry);
+		p_r2j2->Fill(deltaR,asymmetry);
+		delR1->Fill(deltaR);
+		asym1->Fill(asymmetry);
+		//cout<<deltaR<<"\n";
 	}
 	//cout<<"Entries:"<<p_r2j2->GetEntries()<<'\n';
-	cout<<interest->GetEntries()<<endl;
-	plot(p_r2j2);
+	//cout<<interest->GetEntries()<<endl;
+	//plot(p_r2j2);
+	//plot1d(delR1,"#DeltaR","count");
+	plot1d(asym1,"asymmetry","count");
 }
 
 void handleFile(string name, string extension, int filecount){
