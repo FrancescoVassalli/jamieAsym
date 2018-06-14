@@ -183,6 +183,7 @@ void makeData(std::string filename, long nEvents, string pTHat, float gammaCut, 
   	}
   	delete antikT2; //clear the mem
   	interest->Write();
+	close->Write();
   	f->Close();
   	delete f;
   	f=NULL;
