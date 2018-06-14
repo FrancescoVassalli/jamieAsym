@@ -718,9 +718,28 @@ public:
 			phis.push_back(e[*i].phi());
 		}
 	}
+	Jet(float _pT, float _phi, float _y, float _r, float pz, float mass,float energy,int mult){ // calculate eta set constiutuent particles
+		this->pT =Scalar(_pT);
+		this->phi = Scalar(_phi);
+		this->y = Scalar(_y);
+		this->r = Scalar(_r);
+		this->mass = Scalar(mass);
+		this->energy = Scalar(energy);
+		eta= Scalar(calculateEta(_pT,pz));
+		this->mult=mult;
+	}
 	~Jet(){	}
 	void setMult(int m){
 		mult=m;
+	}
+	void setConstituents(std::vector<int> indices, Event e){
+		mult=constiutuentIndices.size();
+		for (std::vector<int>::iterator i = constiutuentIndices.begin(); i != constiutuentIndices.end(); ++i)
+		{
+			pTs.push_back(e[*i].pT());
+			etas.push_back(e[*i].eta());
+			phis.push_back(e[*i].phi());
+		}
 	}
 	Parton setParton(Parton p1, Parton p2){  
 		if (deltaR(p1)<deltaR(p2))//comparision
@@ -923,7 +942,7 @@ public:
 		makeJetDeltaPhi();
 	}
 	//makes a Dijet event given a SlowJet that has already been filled it will exclude jets with deltaphi less than phiRange from phi0
-	DiJet(SlowJet* antikT, float radius,float phi0, float phiRange, Event e){
+	DiJet(SlowJet* antikT, float radius,float phi0, float phiRange){
 		int sizeJet = antikT->sizeJet();
 		int count=0;
 		isDijet=false;
@@ -934,12 +953,14 @@ public:
 				if (deltaPhi(antikT->phi(i),phi0)>phiRange)
 				{
 					if(count==0){
-						leading = Jet(antikT->pT(i),antikT->phi(i),antikT->y(i),radius,(antikT->p(i)).pz(),antikT->m(i),(antikT->p(i)).e(),antikT->constituents(i),e);
+						leading = Jet(antikT->pT(i),antikT->phi(i),antikT->y(i),radius,(antikT->p(i)).pz(),antikT->m(i),(antikT->p(i)).e());
+						jet1Consit=antikT->constituents(i);
 						count++;
 					}
 					else if (count==1)
 					{
-						subleading = Jet(antikT->pT(i),antikT->phi(i),antikT->y(i),radius,(antikT->p(i)).pz(),antikT->m(i),(antikT->p(i)).e(),antikT->constituents(i),e);
+						subleading = Jet(antikT->pT(i),antikT->phi(i),antikT->y(i),radius,(antikT->p(i)).pz(),antikT->m(i),(antikT->p(i)).e());
+						jet2Consit=antikT->constituents(i);
 						count++;
 						break;
 					}
@@ -959,6 +980,10 @@ public:
 	DiJet(){}
 
 	~DiJet(){}
+	void setConstituents(Event e){
+		leading.setConstituents(jet1Consit,e);
+		subleading.setConstituents(jet2Consit,e);
+	}
 	Jet getleading(){
 		return leading;
 	}
@@ -1007,6 +1032,8 @@ private:
 	float photonDeltaPhi;
 	float r2j2;
 	bool isDijet;
+	std::vector<int> jet1Consit;
+	std::vector<int> jet2Consit;
 
 	inline float deltaPhi(float i1, float i2){
 		float r = TMath::Abs(i1-i2);
