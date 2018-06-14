@@ -740,6 +740,7 @@ public:
 			etas.push_back(e[*i].eta());
 			phis.push_back(e[*i].phi());
 		}
+		cout<<"here:"<<etas[0]<<"\n";
 	}
 	Parton setParton(Parton p1, Parton p2){  
 		if (deltaR(p1)<deltaR(p2))//comparision
@@ -773,6 +774,7 @@ public:
 		phi= vectorToArray(phis);
 		eta = vectorToArray(etas);
 		pT= vectorToArray(pTs);
+		cout<<"there"<<etas[0]<<"\n";
 	}
 	Scalar getpT(){
 		return pT;
