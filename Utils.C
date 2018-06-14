@@ -9,6 +9,16 @@ void clear( std::queue<T> &q )
    std::swap( q, empty );
 }
 
+template<class T>
+T* vectorToArray(std::vector<T> v){
+	T *rarry= new T[v.size()];
+	for (int i=0; i<v.size();i++)
+	{
+		rarry[i]=v[i];
+	}
+	return rarry;
+}
+
 float deltaPhi(float i1, float i2);
 #ifndef Scalar_h
 #define Scalar_h
@@ -692,6 +702,22 @@ public:
 		this->energy = Scalar(energy);
 		eta= Scalar(calculateEta(_pT,pz));
 	}
+	Jet(float _pT, float _phi, float _y, float _r, float pz, float mass,float energy,std::vector<int> constiutuentIndices,Event e){ // calculate eta set constiutuent particles
+		this->pT =Scalar(_pT);
+		this->phi = Scalar(_phi);
+		this->y = Scalar(_y);
+		this->r = Scalar(_r);
+		this->mass = Scalar(mass);
+		this->energy = Scalar(energy);
+		eta= Scalar(calculateEta(_pT,pz));
+		mult=constiutuentIndices.size();
+		for (std::vector<int>::iterator i = constiutuentIndices.begin(); i != constiutuentIndices.end(); ++i)
+		{
+			pTs.push_back(e[*i].pT());
+			etas.push_back(e[*i].eta());
+			phis.push_back(e[*i].phi());
+		}
+	}
 	~Jet(){	}
 	void setMult(int m){
 		mult=m;
@@ -722,6 +748,12 @@ public:
 	}
 	int getmult(){
 		return mult;
+	}
+	void fill(int* size, float* phi, float* eta, float* pT){
+		*size=mult;
+		phi= vectorToArray(phis);
+		eta = vectorToArray(etas);
+		pT= vectorToArray(pTs);
 	}
 	Scalar getpT(){
 		return pT;
@@ -778,6 +810,9 @@ private:
 	Scalar mass;
 	Scalar energy;
 	Parton parton;
+	std::vector<float> pTs;
+	std::vector<float> etas;
+	std::vector<float> phis;
 
 	inline float deltaPhi(float i1, float i2){
 		float r = TMath::Abs(i1-i2);
@@ -888,9 +923,10 @@ public:
 		makeJetDeltaPhi();
 	}
 	//makes a Dijet event given a SlowJet that has already been filled it will exclude jets with deltaphi less than phiRange from phi0
-	DiJet(SlowJet* antikT, float radius,float phi0, float phiRange){
+	DiJet(SlowJet* antikT, float radius,float phi0, float phiRange, Event e){
 		int sizeJet = antikT->sizeJet();
 		int count=0;
+		isDijet=false;
 		if (sizeJet>2)
 		{
 			for (int i = 0; i < antikT->sizeJet(); ++i)
@@ -898,12 +934,12 @@ public:
 				if (deltaPhi(antikT->phi(i),phi0)>phiRange)
 				{
 					if(count==0){
-						leading = Jet(antikT->pT(i),antikT->phi(i),antikT->y(i),radius,(antikT->p(i)).pz(),antikT->m(i),(antikT->p(i)).e());
+						leading = Jet(antikT->pT(i),antikT->phi(i),antikT->y(i),radius,(antikT->p(i)).pz(),antikT->m(i),(antikT->p(i)).e(),antikT->constituents(i),e);
 						count++;
 					}
 					else if (count==1)
 					{
-						subleading = Jet(antikT->pT(i),antikT->phi(i),antikT->y(i),radius,(antikT->p(i)).pz(),antikT->m(i),(antikT->p(i)).e());
+						subleading = Jet(antikT->pT(i),antikT->phi(i),antikT->y(i),radius,(antikT->p(i)).pz(),antikT->m(i),(antikT->p(i)).e(),antikT->constituents(i),e);
 						count++;
 						break;
 					}
@@ -928,6 +964,15 @@ public:
 	}
 	Jet getsubleading(){
 		return subleading;
+	}
+	void fill(bool leading, int* size, float* phi, float* eta, float* pT){
+		if (leading)
+		{
+			leading.fill(size, phi,eta,pT);
+		}
+		else{
+			subleading.fill(size, phi,eta,pT);
+		}
 	}
 	float getR2J2(){
 		return r2j2;
