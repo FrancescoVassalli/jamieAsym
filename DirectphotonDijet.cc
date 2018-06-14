@@ -119,6 +119,7 @@ void makeData(std::string filename, long nEvents, string pTHat, float gammaCut, 
     			DiJet dJTemp(antikT2,.2,pythiaengine.event[i].phi(),TMath::Pi()/2.0);
     			/*fill the tree*/ 
           if(dJTemp){
+            cout<<dJTemp;
       			asymmetry=dJTemp.getR2J2();
       			e1=dJTemp.getleading().getpT().value;
       			e2=dJTemp.getsubleading().getpT().value;

@@ -950,6 +950,9 @@ public:
 	operator bool(){
 		return isDijet;
 	}
+	friend std::ostream& operator<<(std::ostream& os, DiJet const & tc) {
+       return os <<"Leading " << tc.leading <<"Subleading "<<tc.subleading;
+    }
 private:
 	Jet leading;
 	Jet subleading;
