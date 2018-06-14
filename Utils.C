@@ -733,7 +733,7 @@ public:
 		mult=m;
 	}
 	void setConstituents(std::vector<int> indices, Event e){
-		mult=constiutuentIndices.size();
+		mult=indices.size();
 		for (std::vector<int>::iterator i = constiutuentIndices.begin(); i != constiutuentIndices.end(); ++i)
 		{
 			pTs.push_back(e[*i].pT());
@@ -993,7 +993,7 @@ public:
 	void fill(bool leading, int* size, float* phi, float* eta, float* pT){
 		if (leading)
 		{
-			leading.fill(size, phi,eta,pT);
+			this->leading.fill(size, phi,eta,pT);
 		}
 		else{
 			subleading.fill(size, phi,eta,pT);
