@@ -738,6 +738,9 @@ public:
 	Scalar getEnergy(){
 		return energy;
 	}
+	Scalar geteta(){
+		return eta;
+	}
 	Scalar operator/(float s){ 
 		return pT/s;
 	}
@@ -928,6 +931,12 @@ public:
 	float getDeltaPhi(){
 		return jetDeltaPhi;
 	}
+	float getDeltaR(){
+		return jetDeltaR;
+	}
+	float getDeltaEta(){
+		return jetDeltaEta;
+	}
 	void operator=(DiJet d2){
 		isDijet=(bool)d2;
 		leading=d2.getleading();
@@ -968,12 +977,12 @@ private:
 	inline void calculateR2J2(){
 		r2j2 = (leading.getEnergy().value-subleading.getEnergy().value)/(leading.getEnergy().value+subleading.getEnergy().value);
 	}
-	inline makeJetDeltaR(){
-	  jetDeltaR=TMath::Power((TMath::Power(TMath::Abs(leading.geteta()-subleading.geteta()),2)+TMath::Power(jetDeltaPhi,2)),.5);
+	inline void makeJetDeltaR(){
+	  jetDeltaR=TMath::Power((TMath::Power(TMath::Abs(leading.geteta().value-subleading.geteta().value),2)+TMath::Power(jetDeltaPhi,2)),.5);
 	  return jetDeltaR;
 	}
-	inline makeJetDeltaEta(){
-		jetDeltaEta=TMath::Abs(leading.geteta()-subleading.geteta());
+	inline void makeJetDeltaEta(){
+		jetDeltaEta=TMath::Abs(leading.geteta().value-subleading.geteta().value);
 		return jetDeltaEta;
 	}
 	
