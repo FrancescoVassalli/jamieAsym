@@ -734,7 +734,7 @@ public:
 	}
 	void setConstituents(std::vector<int> indices, Event e){
 		mult=indices.size();
-		for (std::vector<int>::iterator i = constiutuentIndices.begin(); i != constiutuentIndices.end(); ++i)
+		for (std::vector<int>::iterator i = indices.begin(); i != indices.end(); ++i)
 		{
 			pTs.push_back(e[*i].pT());
 			etas.push_back(e[*i].eta());
