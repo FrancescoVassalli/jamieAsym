@@ -979,11 +979,9 @@ private:
 	}
 	inline void makeJetDeltaR(){
 	  jetDeltaR=TMath::Power((TMath::Power(TMath::Abs(leading.geteta().value-subleading.geteta().value),2)+TMath::Power(jetDeltaPhi,2)),.5);
-	  return jetDeltaR;
 	}
 	inline void makeJetDeltaEta(){
 		jetDeltaEta=TMath::Abs(leading.geteta().value-subleading.geteta().value);
-		return jetDeltaEta;
 	}
 	
 };
