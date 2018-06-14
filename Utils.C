@@ -996,9 +996,12 @@ public:
 		if (leading)
 		{
 			this->leading.fill(size, phi,eta,pT);
+			cout<<"still:"<<eta[0];
 		}
 		else{
 			subleading.fill(size, phi,eta,pT);
+			cout<<"still:"<<eta[0];
+			
 		}
 	}
 	float getR2J2(){
