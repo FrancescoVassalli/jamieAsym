@@ -164,10 +164,19 @@ void makeData(std::string filename, long nEvents, string pTHat, float gammaCut, 
       			interest->Fill();
             if (deltaR<.2)
             {
+              std::vector<float> phitemp;
+              std::vector<float> pTtemp;
+              std::vector<float> etatemp;
               dJTemp.setConstituents(pythiaengine.event);
-              dJTemp.fill(true,&jet1size,&jet1phis,&jet1etas,&jet1pT);
+              dJTemp.fill(true,&jet1size,phitemp,etatemp,pTtemp);
+              jet1phis=vectorToArray(phitemp);
+              jet1etas=vectorToArray(etatemp);
+              jet1pT=vectorToArray(pTtemp);
               cout<<jet1etas[0]<<"\n";
-              dJTemp.fill(false,&jet2size,&jet2phis,&jet2etas,&jet2pT);
+              dJTemp.fill(false,&jet2size,phitemp,etatemp,pTtemp);
+              jet2phis=vectorToArray(phitemp);
+              jet2etas=vectorToArray(etatemp);
+              jet2pT=vectorToArray(pTtemp);
               close->Fill();
             }
     				if (genHEP)
