@@ -10,13 +10,11 @@ void clear( std::queue<T> &q )
 }
 
 template<class T>
-T* vectorToArray(std::vector<T> v){
-	T *rarry= new T[v.size()];
+void vectorToArray(std::vector<T> v, T* a){
 	for (int i=0; i<v.size();i++)
 	{
-		rarry[i]=v[i];
+		a[i]=v[i];
 	}
-	return rarry;
 }
 
 float deltaPhi(float i1, float i2);
@@ -769,11 +767,11 @@ public:
 	int getmult(){
 		return mult;
 	}
-	void fill(int* size, vector<float> phi, vector<float> eta, vector<float> pT){
+	void fill(int* size, float* phi, float* eta, float* pT){
 		*size=mult;
-		phi= phis;
-		eta = etas;
-		pT= pTs;
+		phi= vectorToArray(phis);
+		eta = vectorToArray( etas);
+		pT= vectorToArray( pTs);
 		cout<<"there"<<etas[0]<<"\n";
 	}
 	Scalar getpT(){
@@ -992,7 +990,7 @@ public:
 	Jet getsubleading(){
 		return subleading;
 	}
-	void fill(bool leading, int* size, vector<float> phi, vector<float> eta, vector<float> pT){
+	void fill(bool leading, int* size, float* phi, float* eta, float* pT){
 		if (leading)
 		{
 			this->leading.fill(size, phi,eta,pT);

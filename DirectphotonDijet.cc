@@ -112,12 +112,12 @@ void makeData(std::string filename, long nEvents, string pTHat, float gammaCut, 
     close->Branch("pldeltaPhi",&pldeltaPhi);
     close->Branch("psdeltaPhi",&psdeltaPhi);
     int jet1size,jet2size;
-    float *jet1etas;
-    float *jet2etas;
-    float *jet1phis;
-    float *jet2phis;
-    float *jet1pT;
-    float *jet2pT;
+    float jet1etas[300];
+    float jet2etas[300];
+    float jet1phis[300];
+    float jet2phis[300];
+    float jet1pT[300];
+    float jet2pT[300];
     close->Branch("jet1size",&jet1size);
     close->Branch("jet2size",&jet2size);
     close->Branch("jet2etas",jet2etas,"jet2etas[jet2size]/F");
@@ -160,14 +160,10 @@ void makeData(std::string filename, long nEvents, string pTHat, float gammaCut, 
       			interest->Fill();
             if (deltaR<.2)
             {
-              std::vector<float> phitemp;
-              std::vector<float> pTtemp;
-              std::vector<float> etatemp;
+              
               dJTemp.setConstituents(pythiaengine.event);
               dJTemp.fill(true,&jet1size,phitemp,etatemp,pTtemp);
-              jet1phis=vectorToArray(phitemp);
-              jet1etas=vectorToArray(etatemp);
-              jet1pT=vectorToArray(pTtemp);
+              
               cout<<jet1etas[0]<<"\n";
               dJTemp.fill(false,&jet2size,phitemp,etatemp,pTtemp);
               jet2phis=vectorToArray(phitemp);
