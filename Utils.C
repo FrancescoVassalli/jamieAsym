@@ -738,7 +738,7 @@ public:
 			etas.push_back(e[*i].eta());
 			phis.push_back(e[*i].phi());
 		}
-		cout<<"here:"<<etas[0]<<"\n";
+		//cout<<"here:"<<etas[0]<<"\n";
 	}
 	Parton setParton(Parton p1, Parton p2){  
 		if (deltaR(p1)<deltaR(p2))//comparision
@@ -772,7 +772,7 @@ public:
 		vectorToArray(phis,phi);
 		vectorToArray( etas,eta); 
 		vectorToArray( pTs,pT);
-		cout<<"there"<<etas[0]<<"\n";
+		//cout<<"there"<<etas[0]<<"\n";
 	}
 	Scalar getpT(){
 		return pT;
@@ -994,11 +994,11 @@ public:
 		if (leading)
 		{
 			this->leading.fill(size, phi,eta,pT);
-			cout<<"still:"<<eta[0];
+			//cout<<"still:"<<eta[0];
 		}
 		else{
 			subleading.fill(size, phi,eta,pT);
-			cout<<"still:"<<eta[0];
+			//cout<<"still:"<<eta[0];
 
 		}
 	}
