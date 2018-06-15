@@ -848,7 +848,7 @@ private:
 		return .5* TMath::Log((TMath::Power(pt*pt+pz*pz,.5)+pt))/((TMath::Power(pt*pt+pz*pz,.5)-pt));
 	}
 	float calculateEnergy(float pz){
-		return TMath::Power((pT.value)*(pT.value)+pz*pz+mass.value*mass.value,.5);
+		return TMath::ATanH(pz/(quadrature(pT,pz)));
 	}
 	
 };
