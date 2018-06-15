@@ -194,6 +194,8 @@ void makeData(std::string filename, long nEvents, string pTHat, float gammaCut, 
   	f->Close();
   	delete f;
   	f=NULL;
+    cout<<monoCount<<'\n';
+    cout<<totalCount<<endl;
 }
 
 int main(int argc, char const *argv[] )
