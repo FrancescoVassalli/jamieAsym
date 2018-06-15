@@ -944,7 +944,7 @@ public:
 	//makes a Dijet event given a SlowJet that has already been filled it will exclude jets with deltaphi less than phiRange from phi0
 	DiJet(SlowJet* antikT, float radius,float phi0, float phiRange){
 		int sizeJet = antikT->sizeJet();
-		int count=0;
+		jetCount=0;
 		isDijet=false;
 	if (sizeJet>2)
 		{
@@ -952,21 +952,21 @@ public:
 			{
 				if (deltaPhi(antikT->phi(i),phi0)>phiRange)
 				{
-					if(count==0){
+					if(jetCount==0){
 						leading = Jet(antikT->pT(i),antikT->phi(i),antikT->y(i),radius,(antikT->p(i)).pz(),antikT->m(i),(antikT->p(i)).e());
 						jet1Consit=antikT->constituents(i);
-						count++;
+						jetCount++;
 					}
-					else if (count==1)
+					else if (jetCount==1)
 					{
 						subleading = Jet(antikT->pT(i),antikT->phi(i),antikT->y(i),radius,(antikT->p(i)).pz(),antikT->m(i),(antikT->p(i)).e());
 						jet2Consit=antikT->constituents(i);
-						count++;
+						jetCount++;
 						break;
 					}
 				}
 			}
-			isDijet= (count==2);
+			isDijet= (jetCount==2);
 			calculateR2J2();
 			makeJetDeltaPhi();
 			makeJetDeltaEta();
@@ -1014,6 +1014,9 @@ public:
 	float getDeltaEta(){
 		return jetDeltaEta;
 	}
+	int getJetCount(){
+		return jetCount;
+	}
 	void operator=(DiJet d2){
 		isDijet=(bool)d2;
 		leading=d2.getleading();
@@ -1035,6 +1038,7 @@ private:
 	float photonDeltaPhi;
 	float r2j2;
 	bool isDijet;
+	int jetCount;
 	std::vector<int> jet1Consit;
 	std::vector<int> jet2Consit;
 

@@ -8,51 +8,6 @@ inline string getNextPlotName(){
 	return "plot"+to_string(plotCount++);
 }
 
-class multiTH1F
-{
-public:
-	multiTH1F(){}
-	~multiTH1F(){}
-	multiTH1F(float max, float min, float plotwidth, int Nbins){
-		Nplots = (max-min)/plotwidth;
-		for (int i = 0; i < Nplots; ++i)
-		{
-			v.push_back(new TH1F(getNextPlotName(&plotCount).c_str(),"",Nbins,min+i*plotwidth,min+(i+1)*plotwidth));
-			plotmins.push_back(min+i*plotmins);
-		}
-	}
-	void fill(float in){
-		v[getPlotN(in)]->Fill(in);
-	}
-	void normalize(){
-		for (std::vector<TH1F*>::iterator i = v.begin(); i != v.end(); ++i)
-		{
-			(*i)->Scale(1/(*i)->Integral());
-		}
-	}
-	void plot(){
-		TCanvas* tc= new TCanvas();
-		tc->Divide((int)(v.size()+1)/2,2);
-	}
-
-private:
-	std::vector<TH1F*> v;
-	int Nplots;
-	std::vector<float> plotmins;
-	int getPlotN(float in){
-		if (in<plotmins[0]||in>*plotmins.back())
-		{
-			return -1;
-		}
-		int i=1;
-		while(in>plotmins[i]){
-			i++;
-		}
-		return i;
-	}
-	
-};
-
 queue<Jet> makeJets(float radius,float photonPhi,float* jetphi,float* jety, float* jetpT, float* jetR, float* pz, float* jetm,int SIZE){
 	queue<Jet> r;
 	
@@ -119,6 +74,15 @@ void plot(TH2F *plot){
 	plot->Scale(1/plot->Integral());
 	plot->Draw("colz");
 }
+void plotAve(TH2F *plot, TProfile* prof){
+	TCanvas *tc = new TCanvas();
+	tc->SetRightMargin(.15);
+	axisTitles(plot,"Energy Sum","(E1-E2)/(E1+E2)");
+	gPad->SetLogz();
+	plot->Scale(1/plot->Integral());
+	plot->Draw("colz");
+	prof->Draw("same");
+}
 void plot1d(TH1F *plot,string xTitle, string yTitle){
 	TCanvas *tc = new TCanvas();
 	//tc->SetRightMargin(.15);
@@ -134,20 +98,28 @@ void pickR2J2(TChain* interest){
   	float deltaR;
   	float deltaEta;
   	float photonpT;
+	float e1;
+	float e2;  	
 	interest->SetBranchAddress("asymmetry",&asymmetry);
     interest->SetBranchAddress("deltaEta",&deltaEta);
   	interest->SetBranchAddress("deltaPhi",&deltaPhi);
   	interest->SetBranchAddress("photonpT",&photonpT);
   	interest->SetBranchAddress("deltaR",&deltaR);
+  	interest->SetBranchAddress("e1",&e1);
+  	interest->SetBranchAddress("e2",&e2);
 	
 	TH2F *p_r2j2 = new TH2F(getNextPlotName(&plotCount).c_str(),"",100,0,4,100,0,1); 
+	TH2F *ave = new TH2F(getNextPlotName(&plotCount).c_str(),"",20,20,50,20,0,1);
+	TProfile *aveProf = new TProfile(getNextPlotName(&plotCount).c_str(),"",20,20,50,0,1);
 	TH1F *delR1 = new TH1F(getNextPlotName(&plotCount).c_str(),"",50,0,4);
 	TH1F *asym1 = new TH1F(getNextPlotName(&plotCount).c_str(),"",50,0,1);
-	vector<TH1F*> splits = makeTH1Farray(0,1,.2,20);
+	//vector<TH1F*> splits = makeTH1Farray(0,1,.2,20);
 	for (int i = 0; i < interest->GetEntries(); ++i)
 	{
 		interest->GetEntry(i);
 		p_r2j2->Fill(deltaR,asymmetry);
+		ave->Fill(e1+e2,asymmetry);
+		aveProf->Fill(e1+e2,asymmetry);
 		delR1->Fill(deltaR);
 		asym1->Fill(asymmetry);
 		//cout<<deltaR<<"\n";
@@ -155,8 +127,9 @@ void pickR2J2(TChain* interest){
 	//cout<<"Entries:"<<p_r2j2->GetEntries()<<'\n';
 	//cout<<interest->GetEntries()<<endl;
 	//plot(p_r2j2);
+	plotAve(ave,aveProf);
 	//plot1d(delR1,"#DeltaR","count");
-	plot1d(asym1,"asymmetry","count");
+	//plot1d(asym1,"asymmetry","count");
 }
 
 void handleFile(string name, string extension, int filecount){

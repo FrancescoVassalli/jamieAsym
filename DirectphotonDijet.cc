@@ -127,7 +127,8 @@ void makeData(std::string filename, long nEvents, string pTHat, float gammaCut, 
     close->Branch("jet1pT",jet1pT,"jet1pT[jet1size]/F");
     close->Branch("jet2pT",jet2pT,"jet2pT[jet2size]/F");
 
-
+    int monoCount=0;
+    int totalCount=0;
 
   	/* generation loop*/
     for (int iEvent = 0; iEvent < nEvents; ++iEvent)
@@ -174,8 +175,15 @@ void makeData(std::string filename, long nEvents, string pTHat, float gammaCut, 
             			ascii_io << hepmcevt;//write event to file
             			delete hepmcevt; //delete event so it can be redeclared next time
       			}
-       			break;
           }
+          else{
+              if (dJTemp.getJetCount()==1)
+              {
+                monoCount++;
+              }
+          }
+          totalCount++;
+          break;
     		}
     	}
   	}
