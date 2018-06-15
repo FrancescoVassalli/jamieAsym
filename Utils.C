@@ -769,9 +769,9 @@ public:
 	}
 	void fill(int* size, float* phi, float* eta, float* pT){
 		*size=mult;
-		phi= vectorToArray(phis);
-		eta = vectorToArray( etas);
-		pT= vectorToArray( pTs);
+		vectorToArray(phis,phi);
+		vectorToArray( etas,eta); 
+		vectorToArray( pTs,pT);
 		cout<<"there"<<etas[0]<<"\n";
 	}
 	Scalar getpT(){
