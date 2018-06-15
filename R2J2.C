@@ -8,6 +8,51 @@ inline string getNextPlotName(){
 	return "plot"+to_string(plotCount++);
 }
 
+class multiTH1F
+{
+public:
+	multiTH1F(){}
+	~multiTH1F(){}
+	multiTH1F(float max, float min, float plotwidth, int Nbins){
+		Nplots = (max-min)/plotwidth;
+		for (int i = 0; i < Nplots; ++i)
+		{
+			v.push_back(new TH1F(getNextPlotName(&plotCount).c_str(),"",Nbins,min+i*plotwidth,min+(i+1)*plotwidth));
+			plotmins.push_back(min+i*plotmins);
+		}
+	}
+	void fill(float in){
+		v[getPlotN(in)]->Fill(in);
+	}
+	void normalize(){
+		for (std::vector<TH1F*>::iterator i = v.begin(); i != v.end(); ++i)
+		{
+			(*i)->Scale(1/(*i)->Integral());
+		}
+	}
+	void plot(){
+		TCanvas* tc= new TCanvas();
+		tc->Divide((int)(v.size()+1)/2,2);
+	}
+
+private:
+	std::vector<TH1F*> v;
+	int Nplots;
+	std::vector<float> plotmins;
+	int getPlotN(float in){
+		if (in<plotmins[0]||in>*plotmins.back())
+		{
+			return -1;
+		}
+		int i=1;
+		while(in>plotmins[i]){
+			i++;
+		}
+		return i;
+	}
+	
+};
+
 queue<Jet> makeJets(float radius,float photonPhi,float* jetphi,float* jety, float* jetpT, float* jetR, float* pz, float* jetm,int SIZE){
 	queue<Jet> r;
 	
@@ -56,6 +101,16 @@ inline float deltaPhi(Photon p, Jet j){
 	return r;
 }
 
+std::vector<TH1F*> makeTH1Farray(float min, float max, float plotwidth, float Nbins){
+	int Nplots = (max-min)/plotwidth;
+	vector<TH1F*> rarry; //= new TH1F*[Nplots];
+	for (int i = 0; i < Nplots; ++i)
+	{
+		rarry[i]= new TH1F(getNextPlotName(&plotCount).c_str(),"",Nbins,min+i*plotwidth,min+(i+1)*plotwidth);
+	}
+	return rarry;
+}
+
 void plot(TH2F *plot){
 	TCanvas *tc = new TCanvas();
 	tc->SetRightMargin(.15);
@@ -88,6 +143,7 @@ void pickR2J2(TChain* interest){
 	TH2F *p_r2j2 = new TH2F(getNextPlotName(&plotCount).c_str(),"",100,0,4,100,0,1); 
 	TH1F *delR1 = new TH1F(getNextPlotName(&plotCount).c_str(),"",50,0,4);
 	TH1F *asym1 = new TH1F(getNextPlotName(&plotCount).c_str(),"",50,0,1);
+	vector<TH1F*> splits = makeTH1Farray(0,1,.2,20);
 	for (int i = 0; i < interest->GetEntries(); ++i)
 	{
 		interest->GetEntry(i);
