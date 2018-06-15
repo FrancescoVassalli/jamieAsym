@@ -173,6 +173,7 @@ void makeData(std::string filename, long nEvents, string pTHat, float gammaCut, 
               jet2phis=vectorToArray(phitemp);
               jet2etas=vectorToArray(etatemp);
               jet2pT=vectorToArray(pTtemp);
+		cout<<"seg fault"<<endl;
               close->Fill();
             }
     				if (genHEP)
