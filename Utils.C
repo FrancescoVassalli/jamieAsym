@@ -976,7 +976,7 @@ public:
 			
 		}
 	}
-	DiJet(SlowJet* antikT, float radius,float phi0, float eta0, float range){
+	DiJet(SlowJet* antikT, float radius,float phi0, float eta0, float phiRange){
 		int sizeJet = antikT->sizeJet();
 		jetCount=0;
 		isDijet=false;
@@ -984,16 +984,17 @@ public:
 		{
 			for (int i = 0; i < antikT->sizeJet(); ++i)
 			{
-				if (quadrature(deltaPhi(antikT->phi(i),phi0),TMath::Abs(antikT->eta(i)-eta0))>range)
+				Jet temp(antikT->pT(i),antikT->phi(i),antikT->y(i),radius,(antikT->p(i)).pz(),antikT->m(i),(antikT->p(i)).e()); 
+				if (quadrature(deltaPhi(antikT->phi(i),phi0),TMath::Abs(temp.geteta().value-eta0))>phiRange)
 				{
 					if(jetCount==0){
-						leading = Jet(antikT->pT(i),antikT->phi(i),antikT->y(i),radius,(antikT->p(i)).pz(),antikT->m(i),(antikT->p(i)).e());
+						leading=temp;
 						jet1Consit=antikT->constituents(i);
 						jetCount++;
 					}
 					else if (jetCount==1)
 					{
-						subleading = Jet(antikT->pT(i),antikT->phi(i),antikT->y(i),radius,(antikT->p(i)).pz(),antikT->m(i),(antikT->p(i)).e());
+						subleading=temp;
 						jet2Consit=antikT->constituents(i);
 						jetCount++;
 						break;
