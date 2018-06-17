@@ -127,8 +127,8 @@ void pickR2J2(TChain* interest){
 	//cout<<"Entries:"<<p_r2j2->GetEntries()<<'\n';
 	//cout<<interest->GetEntries()<<endl;
 	//plot(p_r2j2);
-	plotAve(ave,aveProf);
-	//plot1d(delR1,"#DeltaR","count");
+	//plotAve(ave,aveProf);
+	plot1d(delR1,"#DeltaR","count");
 	//plot1d(asym1,"asymmetry","count");
 }
 

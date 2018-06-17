@@ -707,7 +707,7 @@ public:
 		this->r = Scalar(_r);
 		this->mass = Scalar(mass);
 		this->energy = Scalar(energy);
-		eta= Scalar(calculateEta(_pT,pz));
+		eta= Scalar(calculateEta(_pT,_phi,pz,energy));
 		mult=constiutuentIndices.size();
 		for (std::vector<int>::iterator i = constiutuentIndices.begin(); i != constiutuentIndices.end(); ++i)
 		{
@@ -723,7 +723,7 @@ public:
 		this->r = Scalar(_r);
 		this->mass = Scalar(mass);
 		this->energy = Scalar(energy);
-		eta= Scalar(calculateEta(_pT,pz));
+		eta= Scalar(calculateEta(_pT,_phi,pz,energy));
 		this->mult=mult;
 	}
 	~Jet(){	}
@@ -844,8 +844,10 @@ private:
 	float deltaR(Parton p){
 	  return TMath::Power((TMath::Power(TMath::Abs(p.geteta()-eta.value),2)+TMath::Power(deltaPhi(p.getphi(),phi.value),2)),.5);
 	}
-	float calculateEta(float pt, float pz){
-		return .5* TMath::Log((TMath::Power(pt*pt+pz*pz,.5)+pt))/((TMath::Power(pt*pt+pz*pz,.5)-pt));
+	float calculateEta(float pt, float phi, float pz, float energy){
+		TLorentzVector tl;
+		tl.SetPxPyPzE(pt*TMath::Cos(phi), pt*TMath::Sin(phi),pz,energy);
+		return tl.Eta();
 	}
 	float calculateEnergy(float pz){
 		return TMath::ATanH(pz/(TMath::Power((pT*pT).value+pz*pz,.5)));
