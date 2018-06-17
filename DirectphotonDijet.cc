@@ -145,7 +145,7 @@ void makeData(std::string filename, long nEvents, string pTHat, float gammaCut, 
     		{
     			/*make the event*/	
     			antikT2->analyze(pythiaengine.event);
-    			DiJet dJTemp(antikT2,.2,pythiaengine.event[i].phi(),TMath::Pi()/2.0);
+    		  DiJet dJTemp(antikT2,.2,pythiaengine.event[i].phi(),pythiaengine.event[i].eta(), TMath::Pi()/2.0);
     			/*fill the tree*/ 
           if(dJTemp){
             //cout<<dJTemp;
