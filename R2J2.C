@@ -89,7 +89,7 @@ void plot1d(TH1F *plot,string xTitle, string yTitle){
 	axisTitles(plot,xTitle.c_str(),yTitle.c_str());
 	//gPad->SetLogz();
 	plot->Scale(1/plot->Integral());
-	plot->Draw();
+	plot->Draw("P0");
 }
 
 void pickR2J2(TChain* interest){
@@ -111,7 +111,7 @@ void pickR2J2(TChain* interest){
 	TH2F *p_r2j2 = new TH2F(getNextPlotName(&plotCount).c_str(),"",100,0,4,100,0,1); 
 	TH2F *ave = new TH2F(getNextPlotName(&plotCount).c_str(),"",20,20,50,20,0,1);
 	TProfile *aveProf = new TProfile(getNextPlotName(&plotCount).c_str(),"",20,20,50,0,1);
-	TH1F *delR1 = new TH1F(getNextPlotName(&plotCount).c_str(),"",50,0,4);
+	TH1F *delR1 = new TH1F(getNextPlotName(&plotCount).c_str(),"",500,0,4);
 	TH1F *asym1 = new TH1F(getNextPlotName(&plotCount).c_str(),"",50,0,1);
 	//vector<TH1F*> splits = makeTH1Farray(0,1,.2,20);
 	for (int i = 0; i < interest->GetEntries(); ++i)
@@ -126,9 +126,9 @@ void pickR2J2(TChain* interest){
 	}
 	//cout<<"Entries:"<<p_r2j2->GetEntries()<<'\n';
 	//cout<<interest->GetEntries()<<endl;
-	//plot(p_r2j2);
+	plot(p_r2j2);
 	//plotAve(ave,aveProf);
-	plot1d(delR1,"#DeltaR","count");
+	//plot1d(delR1,"#DeltaR","count");
 	//plot1d(asym1,"asymmetry","count");
 }
 

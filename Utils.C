@@ -976,6 +976,38 @@ public:
 			
 		}
 	}
+	DiJet(SlowJet* antikT, float radius,float phi0, float eta0, float range){
+		int sizeJet = antikT->sizeJet();
+		jetCount=0;
+		isDijet=false;
+	if (sizeJet>2)
+		{
+			for (int i = 0; i < antikT->sizeJet(); ++i)
+			{
+				if (quadrature(deltaPhi(antikT->phi(i),phi0),TMath::Abs(antikT->eta(i)-eta0))>range)
+				{
+					if(jetCount==0){
+						leading = Jet(antikT->pT(i),antikT->phi(i),antikT->y(i),radius,(antikT->p(i)).pz(),antikT->m(i),(antikT->p(i)).e());
+						jet1Consit=antikT->constituents(i);
+						jetCount++;
+					}
+					else if (jetCount==1)
+					{
+						subleading = Jet(antikT->pT(i),antikT->phi(i),antikT->y(i),radius,(antikT->p(i)).pz(),antikT->m(i),(antikT->p(i)).e());
+						jet2Consit=antikT->constituents(i);
+						jetCount++;
+						break;
+					}
+				}
+			}
+			isDijet= (jetCount==2);
+			calculateR2J2();
+			makeJetDeltaPhi();
+			makeJetDeltaEta();
+			makeJetDeltaR();
+			
+		}
+	}
 	DiJet(bool f){
 		isDijet=f;
 	}
@@ -1060,6 +1092,9 @@ private:
 			jetDeltaPhi= 2*TMath::Pi()-jetDeltaPhi;
 		}
 		return jetDeltaPhi;
+	}
+	inline float quadrature(float dphi, float deta){
+		return TMath::Power(dphi*dphi+deta*deta,.5);
 	}
 
 	inline void calculateR2J2(){
