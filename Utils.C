@@ -675,14 +675,14 @@ public:
 		y=Scalar(_y);
 		r=0;
 	}
-	Jet(float _pT, float _phi, float _y, float _r, float pz){ // calculate eta
+	/*Jet(float _pT, float _phi, float _y, float _r, float pz){ // calculate eta
 		this->pT =Scalar(_pT);
 		this->phi = Scalar(_phi);
 		this->y = Scalar(_y);
 		this->r = Scalar(_r);
-		eta= Scalar(calculateEta(_pT,pz));
-	}
-	Jet(float _pT, float _phi, float _y, float _r, float pz, float mass){ // calculate eta and e
+		eta= Scalar(calculateEta(_pT,_phi,pz));
+	}*/
+	/*Jet(float _pT, float _phi, float _y, float _r, float pz, float mass){ // calculate eta and e
 		this->pT =Scalar(_pT);
 		this->phi = Scalar(_phi);
 		this->y = Scalar(_y);
@@ -690,7 +690,7 @@ public:
 		this->mass = Scalar(mass);
 		energy = Scalar(calculateEnergy(pz));
 		eta= Scalar(calculateEta(_pT,pz));
-	}
+	}*/
 	Jet(float _pT, float _phi, float _y, float _r, float pz, float mass,float energy){ // calculate eta
 		this->pT =Scalar(_pT);
 		this->phi = Scalar(_phi);
@@ -698,7 +698,7 @@ public:
 		this->r = Scalar(_r);
 		this->mass = Scalar(mass);
 		this->energy = Scalar(energy);
-		eta= Scalar(calculateEta(_pT,pz));
+		eta= Scalar(calculateEta(_pT,_phi,pz,energy));
 	}
 	Jet(float _pT, float _phi, float _y, float _r, float pz, float mass,float energy,std::vector<int> constiutuentIndices,Event e){ // calculate eta set constiutuent particles
 		this->pT =Scalar(_pT);
