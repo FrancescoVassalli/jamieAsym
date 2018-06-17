@@ -159,7 +159,7 @@ void makeData(std::string filename, long nEvents, string pTHat, float gammaCut, 
       			psdeltaPhi=dJTemp.getsubleading().deltaPhi(pythiaengine.event[i].phi());
       			photonpT=pythiaengine.event[i].pT();
       			interest->Fill();
-            if (deltaR<.2)
+            if (deltaR<.6)
             {
             
               dJTemp.setConstituents(pythiaengine.event);
