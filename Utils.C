@@ -517,6 +517,14 @@ public:
 		this->eta= Scalar((float)_eta);
 		direct=process;
 	}
+	Photon(int position, float* eT, float* phi, float* eta, int SIZE){
+		etCone=.3;
+		this->position =position;
+		this->pT= Scalar(eT[position]);
+		this->phi = Scalar(phi[position]);
+		this->eta = Scalar(eta[position]);
+		findIsoEt(eT,phi,eta,SIZE);
+	}
 	Photon(double _pT,double _phi, double _eta, bool process, std::queue<myParticle> all){
 		this->pT = Scalar((float)_pT);
 		this->phi= Scalar((float)_phi);
@@ -627,7 +635,7 @@ private:
 	    return false;
 	  }
 	}
-	float findIsoEt(float* phi, float* eta, float* eT, int SIZE){
+	float findIsoEt(float* phi, float* eta, float* eT, int SIZE){ // track id's to ignore v and mu
 		isoEt=0;
 		for(int i=0;i<SIZE;i++){
 			if (inCone(eta[i],phi[i]))

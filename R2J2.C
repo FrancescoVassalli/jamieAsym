@@ -66,13 +66,14 @@ std::vector<TH1F*> makeTH1Farray(float min, float max, float plotwidth, float Nb
 	return rarry;
 }
 
-void plot(TH2F *plot){
+void plot(TH2F *plot, TProfile* prof){
 	TCanvas *tc = new TCanvas();
 	tc->SetRightMargin(.15);
 	axisTitles(plot,"#DeltaR Jet1-Jet2","(E1-E2)/(E1+E2)");
 	gPad->SetLogz();
 	plot->Scale(1/plot->Integral());
 	plot->Draw("colz");
+	prof->Draw("same");
 }
 void plotAve(TH2F *plot, TProfile* prof){
 	TCanvas *tc = new TCanvas();
@@ -109,8 +110,9 @@ void pickR2J2(TChain* interest){
   	interest->SetBranchAddress("e2",&e2);
 	
 	TH2F *p_r2j2 = new TH2F(getNextPlotName(&plotCount).c_str(),"",100,0,4,100,0,1); 
-	TH2F *ave = new TH2F(getNextPlotName(&plotCount).c_str(),"",20,20,50,20,0,1);
-	TProfile *aveProf = new TProfile(getNextPlotName(&plotCount).c_str(),"",20,20,50,0,1);
+	TProfile *profp2j2 = new TProfile(getNextPlotName(&plotCount).c_str(),"",100,0,4,0,1);
+	TH2F *ave = new TH2F(getNextPlotName(&plotCount).c_str(),"",35,20,350,20,0,1);
+	TProfile *aveProf = new TProfile(getNextPlotName(&plotCount).c_str(),"",35,20,350,0,1);
 	TH1F *delR1 = new TH1F(getNextPlotName(&plotCount).c_str(),"",500,0,4);
 	TH1F *asym1 = new TH1F(getNextPlotName(&plotCount).c_str(),"",200,0,1);
 	//vector<TH1F*> splits = makeTH1Farray(0,1,.2,20);
@@ -118,6 +120,7 @@ void pickR2J2(TChain* interest){
 	{
 		interest->GetEntry(i);
 		p_r2j2->Fill(deltaR,asymmetry);
+		profp2j2->Fill(deltaR,asymmetry);
 		ave->Fill(e1+e2,asymmetry);
 		aveProf->Fill(e1+e2,asymmetry);
 		delR1->Fill(deltaR);
@@ -126,10 +129,10 @@ void pickR2J2(TChain* interest){
 	}
 	//cout<<"Entries:"<<p_r2j2->GetEntries()<<'\n';
 	//cout<<interest->GetEntries()<<endl;
-	//plot(p_r2j2);
+	plot(p_r2j2, profp2j2);
 	//plotAve(ave,aveProf);
 	//plot1d(delR1,"#DeltaR","count");
-	plot1d(asym1,"asymmetry","count");
+	//plot1d(asym1,"asymmetry","count");
 }
 
 void handleFile(string name, string extension, int filecount){
