@@ -36,7 +36,7 @@ cp  $SOURCE_PHOTONMAKER $SCRATCH_AREA/jamieasym/
 #-------------------                                                                                                                                  
 
 cd $SCRATCH_AREA/jamieasym
-./DirectphotonDijet LHCGamma${1} 95 100 100000
+./DirectphotonDijet LHCGamma${1} 95 100 50000
 cp LHCGamma${1}* $OUT_FILE
 
 
